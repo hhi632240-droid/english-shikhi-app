@@ -1,0 +1,1313 @@
+import { useState, useRef, useEffect } from "react";
+
+// ============ FULL ENGLISH BOOK ============
+const BOOK_CHAPTERS = [
+  {
+    id:1, icon:"👶", title:"একদম শুরু থেকে", subtitle:"Absolute Basics",
+    lessons:[
+      { title:"English বর্ণমালা (Alphabet)", content:"English এ মোট ২৬টি বর্ণ আছে — ৫টি Vowel ও ২১টি Consonant।",
+        sections:[
+          { heading:"Vowels (স্বরবর্ণ) — ৫টি", items:["A — আ/এ্যা — Apple (আপেল)","E — ই/এ — Egg (ডিম)","I — আই — Ice (বরফ)","O — ও/অ — Orange (কমলা)","U — ইউ/আ — Umbrella (ছাতা)"] },
+          { heading:"Consonants থেকে গুরুত্বপূর্ণ কিছু", items:["B — বি — Ball (বল)","C — সি — Cat (বিড়াল)","D — ডি — Dog (কুকুর)","F — এফ — Fish (মাছ)","G — জি — Girl (মেয়ে)","H — এইচ — Hat (টুপি)","K — কে — Kite (ঘুড়ি)","L — এল — Lion (সিংহ)","M — এম — Milk (দুধ)","P — পি — Pen (কলম)","R — আর — Rain (বৃষ্টি)","S — এস — Sun (সূর্য)","T — টি — Tree (গাছ)"] },
+        ], tip:"প্রতিদিন সকালে A থেকে Z পর্যন্ত উচ্চস্বরে বলো — ৭ দিনেই মুখস্থ হবে!" },
+      { title:"Numbers (সংখ্যা) ১–১০০", content:"English এ সংখ্যা বলা শেখো:",
+        sections:[
+          { heading:"১ থেকে ২০", items:["1-One (ওয়ান)","2-Two (টু)","3-Three (থ্রি)","4-Four (ফোর)","5-Five (ফাইভ)","6-Six (সিক্স)","7-Seven (সেভেন)","8-Eight (এইট)","9-Nine (নাইন)","10-Ten (টেন)","11-Eleven (ইলেভেন)","12-Twelve (টুয়েলভ)","13-Thirteen (থার্টিন)","14-Fourteen","15-Fifteen","20-Twenty (টুয়েন্টি)"] },
+          { heading:"বড় সংখ্যা", items:["30-Thirty (থার্টি)","40-Forty (ফোর্টি)","50-Fifty (ফিফটি)","100-One hundred (ওয়ান হান্ড্রেড)","1000-One thousand","100000-One lakh"] },
+        ], tip:"বাজারে দাম জিজ্ঞেস করলে English এ বলার চেষ্টা করো।" },
+      { title:"Days & Months (দিন ও মাস)", content:"সপ্তাহের দিন ও বছরের মাসগুলো:",
+        sections:[
+          { heading:"সপ্তাহের ৭ দিন", items:["Monday (মান্ডে) — সোমবার","Tuesday (টিউজডে) — মঙ্গলবার","Wednesday (ওয়েনজডে) — বুধবার","Thursday (থার্জডে) — বৃহস্পতিবার","Friday (ফ্রাইডে) — শুক্রবার","Saturday (স্যাটারডে) — শনিবার","Sunday (সানডে) — রবিবার"] },
+          { heading:"বছরের ১২ মাস", items:["January, February, March","April, May, June","July, August, September","October, November, December"] },
+        ], tip:"প্রতিদিন সকালে আজকের দিন English এ বলো।" },
+    ]
+  },
+  {
+    id:2, icon:"🗣️", title:"প্রথম কথোপকথন", subtitle:"First Conversations",
+    lessons:[
+      { title:"নিজের পরিচয় দেওয়া", content:"যেকোনো পরিস্থিতিতে নিজেকে পরিচয় করিয়ে দেওয়া:",
+        sections:[
+          { heading:"Basic পরিচয়", items:["My name is Rahim. (মাই নেইম ইজ রাহিম) — আমার নাম রাহিম।","I am from Bangladesh. (আই অ্যাম ফ্রম বাংলাদেশ)","I am 25 years old. (আই অ্যাম টুয়েন্টি ফাইভ ইয়ার্স ওল্ড)","I am a student/teacher/businessman.","Nice to meet you! (নাইস টু মিট ইউ) — পরিচিত হয়ে ভালো লাগলো!"] },
+          { heading:"পেশা বলা", items:["I am a doctor. (আই অ্যাম আ ডক্টর)","I work at a company. (আই ওয়ার্ক অ্যাট আ কম্পানি)","I run my own business. (আই রান মাই ওন বিজনেস)","I am a homemaker. (আই অ্যাম আ হোমমেকার)"] },
+        ], tip:"আয়নার সামনে দাঁড়িয়ে নিজেকে পরিচয় দেওয়ার practice করো।" },
+      { title:"অভিবাদন ও সৌজন্য", content:"দৈনন্দিন জীবনে ব্যবহৃত সৌজন্যমূলক বাক্য:",
+        sections:[
+          { heading:"সময় অনুযায়ী Greeting", items:["Good morning! (গুড মর্নিং) — শুভ সকাল!","Good afternoon! (গুড আফটারনুন) — শুভ বিকাল!","Good evening! (গুড ইভনিং) — শুভ সন্ধ্যা!","Good night! (গুড নাইট) — শুভ রাত্রি!","How are you? (হাউ আর ইউ) — কেমন আছেন?","I am fine, thank you! — ভালো আছি, ধন্যবাদ!"] },
+          { heading:"ধন্যবাদ ও ক্ষমা", items:["Thank you very much. — অনেক ধন্যবাদ।","You are welcome. — স্বাগতম।","Sorry. (সরি) — দুঃখিত।","Excuse me. (এক্সকিউজ মি) — মাফ করবেন।","No problem. (নো প্রবলেম) — কোনো সমস্যা নেই।","My pleasure! — আমার আনন্দ!"] },
+        ], tip:"প্রতিবার ধন্যবাদ দেওয়ার সময় English এ বলো।" },
+    ]
+  },
+  {
+    id:3, icon:"📝", title:"Grammar এর ভিত্তি", subtitle:"Basic Grammar",
+    lessons:[
+      { title:"Parts of Speech — শব্দের ধরন", content:"English Grammar এর সবচেয়ে গুরুত্বপূর্ণ অংশ:",
+        sections:[
+          { heading:"Noun (বিশেষ্য) — নামবাচক শব্দ", items:["ব্যক্তি: Boy (ছেলে), Teacher (শিক্ষক), Doctor","স্থান: School (স্কুল), Bangladesh, Dhaka","বস্তু: Book (বই), Water (পানি), Phone","ধারণা: Love (ভালোবাসা), Happiness (সুখ)","নিয়ম: যার নাম আছে সেটাই Noun!"] },
+          { heading:"Verb (ক্রিয়া) — কাজবাচক শব্দ", items:["Go (যাওয়া) → I go to school.","Eat (খাওয়া) → I eat rice.","Sleep (ঘুমানো) → I sleep at night.","Love (ভালোবাসা) → I love my family.","Speak (বলা) → I speak English.","নিয়ম: যে শব্দ কাজ বোঝায় সেটাই Verb!"] },
+          { heading:"Adjective (বিশেষণ)", items:["Big (বড়) → Big house","Beautiful (সুন্দর) → Beautiful flower","Good (ভালো) → Good boy","Hot (গরম) → Hot water","নিয়ম: Noun-এর আগে বসে বর্ণনা করে।"] },
+          { heading:"Pronoun (সর্বনাম)", items:["I (আমি), You (তুমি/আপনি)","He (সে — পুরুষ), She (সে — মহিলা)","We (আমরা), They (তারা), It (এটা)"] },
+        ], tip:"যেকোনো বাক্য দেখলে Noun আর Verb খোঁজার চেষ্টা করো।" },
+      { title:"Tense — কালের ব্যবহার", content:"Tense দিয়ে বোঝা যায় কাজটা কখন হয়েছে — সহজে মনে রাখো:",
+        sections:[
+          { heading:"Present Tense (বর্তমান — এখন হয়)", items:["I eat rice. (আই ইট রাইস) — আমি ভাত খাই।","She reads books. (শি রিডস বুকস) — সে বই পড়ে।","They play cricket. — তারা ক্রিকেট খেলে।","নিয়ম: Subject + Verb (He/She/It হলে Verb+s)"] },
+          { heading:"Past Tense (অতীত — আগে হয়েছিল)", items:["I ate rice. (আই এইট রাইস) — আমি ভাত খেয়েছিলাম।","She went to school. — সে স্কুলে গিয়েছিল।","We watched a movie. — আমরা সিনেমা দেখেছিলাম।","নিয়ম: Regular Verb + ed / Irregular আলাদা"] },
+          { heading:"Future Tense (ভবিষ্যৎ — পরে হবে)", items:["I will eat rice. (আই উইল ইট রাইস) — আমি ভাত খাবো।","She will go to school. — সে স্কুলে যাবে।","We will win. — আমরা জিতব।","নিয়ম: will + Verb এর base form"] },
+        ], tip:"প্রতিদিনের কাজ তিনটি Tense এ বলার practice করো।" },
+      { title:"Sentence বানানোর নিয়ম", content:"English Sentence বানানো অনেক সহজ — একটাই সূত্র:",
+        sections:[
+          { heading:"মূল সূত্র: S + V + O", items:["S = Subject (কে করছে)","V = Verb (কী করছে)","O = Object (কার উপর করছে)","I + eat + rice → I eat rice. ✓","She + loves + flowers → She loves flowers. ✓","We + play + cricket → We play cricket. ✓"] },
+          { heading:"Negative বাক্য (না বলতে)", items:["I do not eat rice. (আমি ভাত খাই না।)","She does not go. (সে যায় না।)","I did not see him. (আমি তাকে দেখিনি।)"] },
+          { heading:"Question বাক্য (প্রশ্ন করতে)", items:["Do you eat rice? (তুমি কি ভাত খাও?)","Does she go to school? (সে কি স্কুলে যায়?)","Did you see him? (তুমি কি তাকে দেখেছিলে?)"] },
+        ], tip:"প্রতিদিন ৫টা নতুন বাক্য বানাও এই নিয়মে।" },
+    ]
+  },
+  {
+    id:4, icon:"🏠", title:"দৈনন্দিন জীবন", subtitle:"Daily Life English",
+    lessons:[
+      { title:"পরিবার সম্পর্কে বলা", content:"পরিবারের সদস্যদের নিয়ে English এ কথা বলা:",
+        sections:[
+          { heading:"পরিবারের সদস্য", items:["Father (ফাদার) — বাবা","Mother (মাদার) — মা","Brother (ব্রাদার) — ভাই","Sister (সিস্টার) — বোন","Son (সান) — ছেলে","Daughter (ডটার) — মেয়ে","Grandfather (গ্র্যান্ডফাদার) — দাদা/নানা","Grandmother (গ্র্যান্ডমাদার) — দাদি/নানি"] },
+          { heading:"পরিবার নিয়ে বাক্য", items:["My father is a doctor. — আমার বাবা ডাক্তার।","I have two brothers. — আমার দুই ভাই আছে।","My mother cooks very well. — আমার মা খুব ভালো রান্না করেন।","We are a happy family. — আমরা একটি সুখী পরিবার।"] },
+        ], tip:"পরিবারের সবাইকে English এ পরিচয় করিয়ে দেওয়ার practice করো।" },
+      { title:"সময় ও দিনের কথা", content:"প্রতিদিনের কাজের কথা English এ বলো:",
+        sections:[
+          { heading:"দিনের কাজ", items:["I wake up at 6 am. — আমি সকাল ৬টায় উঠি।","I have breakfast at 8. — আমি ৮টায় নাস্তা করি।","I go to work at 9. — আমি ৯টায় কাজে যাই।","I come home at 6 pm. — আমি সন্ধ্যা ৬টায় বাড়ি আসি।","I sleep at 10 pm. — আমি রাত ১০টায় ঘুমাই।"] },
+          { heading:"সময় বলা", items:["What time is it? — কটা বাজে?","It is 3 o'clock. — তিনটা বাজে।","It is half past 4. — সাড়ে চারটা।","It is quarter to 6. — পৌনে ছয়টা।"] },
+        ], tip:"প্রতিদিন সকালে উঠে English এ সময় বলো।" },
+    ]
+  },
+  {
+    id:5, icon:"🛍️", title:"বাইরে কথা বলা", subtitle:"Outside Conversations",
+    lessons:[
+      { title:"বাজার ও কেনাকাটা", content:"দোকানে ও বাজারে English এ কথা বলা:",
+        sections:[
+          { heading:"দোকানে বলার বাক্য", items:["How much does this cost? — এটার দাম কত?","Can I have this please? — আমি এটা নিতে পারি?","Do you have a smaller size? — ছোট সাইজ আছে?","Can you give a discount? — একটু কমানো যাবে?","I will take this. — আমি এটা নেব।","This is too expensive. — এটা অনেক দামি।"] },
+          { heading:"Payment এর সময়", items:["How much is the total? — মোট কত?","Here is the money. — এই নিন টাকা।","Do you have change? — ভাঙতি আছে?","Can I pay by card? — কার্ডে দিতে পারব?"] },
+        ], tip:"পরের বার কেনাকাটায় গেলে English এ দাম জিজ্ঞেস করো।" },
+      { title:"রেস্টুরেন্টে খাবার অর্ডার", content:"রেস্টুরেন্টে English এ অর্ডার দেওয়া:",
+        sections:[
+          { heading:"টেবিল ও মেনু", items:["A table for two please. — দুইজনের জন্য টেবিল।","Can I see the menu? — মেনু দেখতে পারি?","We are ready to order. — আমরা অর্ডার দিতে প্রস্তুত।"] },
+          { heading:"খাবার অর্ডার", items:["I would like chicken curry please. — চিকেন কারি নেব।","Can I have water please? — পানি দেবেন?","No spicy please. — ঝাল ছাড়া।","It was delicious! — খুব মজাদার ছিল!","Can I have the bill please? — বিল দেবেন?"] },
+        ], tip:"Food delivery app এ English এ order দেওয়ার চেষ্টা করো।" },
+      { title:"রাস্তা ও দিকনির্দেশনা", content:"রাস্তায় দিকনির্দেশনা দেওয়া ও নেওয়া:",
+        sections:[
+          { heading:"জিজ্ঞেস করা", items:["Excuse me, where is the hospital? — হাসপাতাল কোথায়?","How do I get to the station? — স্টেশনে কীভাবে যাব?","Is it far from here? — এখান থেকে কি দূরে?","Can you show me on the map? — ম্যাপে দেখাতে পারবেন?"] },
+          { heading:"দিক বলা", items:["Go straight. (গো স্ট্রেইট) — সোজা যান।","Turn left. (টার্ন লেফট) — বাম দিকে মোড় নিন।","Turn right. (টার্ন রাইট) — ডান দিকে মোড় নিন।","It is about 5 minutes walk. — হেঁটে ৫ মিনিট লাগবে।"] },
+        ], tip:"Google Maps এর English direction follow করার চেষ্টা করো।" },
+    ]
+  },
+  {
+    id:6, icon:"💼", title:"অফিস ও চাকরি", subtitle:"Work & Office English",
+    lessons:[
+      { title:"Job Interview এ কী বলবে", content:"Interview এ confident হয়ে English বলার উপায়:",
+        sections:[
+          { heading:"শুরুতে বলো", items:["Good morning, sir/madam. — শুভ সকাল।","Thank you for this opportunity. — এই সুযোগের জন্য ধন্যবাদ।","I am very happy to be here. — আমি এখানে আসতে পেরে খুশি।"] },
+          { heading:"নিজের সম্পর্কে", items:["I have 3 years of experience. — আমার ৩ বছরের অভিজ্ঞতা।","I am hardworking and dedicated. — আমি পরিশ্রমী ও নিবেদিত।","I am a quick learner. — আমি দ্রুত শিখতে পারি।","My strength is teamwork. — আমার শক্তি হলো দলে কাজ করা।"] },
+          { heading:"শেষে বলো", items:["Thank you for your time. — আপনার সময়ের জন্য ধন্যবাদ।","I am very interested in this position. — এই পদে আমি আগ্রহী।","When can I expect to hear from you? — কখন জানতে পারব?"] },
+        ], tip:"এই বাক্যগুলো আয়নার সামনে বারবার বলো।" },
+      { title:"অফিসে প্রতিদিনের English", content:"কর্মক্ষেত্রে দৈনিক ব্যবহৃত English বাক্য:",
+        sections:[
+          { heading:"Meeting এ", items:["Good morning everyone. — সবাইকে শুভ সকাল।","Shall we start? — শুরু করা যাক?","I have a question. — আমার একটা প্রশ্ন আছে।","Can you repeat that? — আরেকবার বলবেন?","I understand. — আমি বুঝতে পেরেছি।","I agree with you. — আমি আপনার সাথে একমত।"] },
+          { heading:"Email শুরু ও শেষ", items:["Dear Sir/Madam, — প্রিয় স্যার/ম্যাডাম,","I am writing to inform you... — আমি জানাতে লিখছি...","Please find attached... — সংযুক্ত দেখুন...","Thank you for your time. — সময়ের জন্য ধন্যবাদ।","Best regards, — শুভেচ্ছায়,"] },
+        ], tip:"কাজের যেকোনো বার্তা English এ লেখার চেষ্টা করো।" },
+    ]
+  },
+  {
+    id:7, icon:"✈️", title:"ভ্রমণে English", subtitle:"Travel English",
+    lessons:[
+      { title:"এয়ারপোর্ট ও হোটেলে", content:"ভ্রমণের সময় প্রয়োজনীয় English বাক্য:",
+        sections:[
+          { heading:"এয়ারপোর্টে", items:["Where is the check-in counter? — চেক-ইন কাউন্টার কোথায়?","I have one bag to check in. — একটা ব্যাগ চেক-ইন করতে হবে।","What is the gate number? — গেট নম্বর কত?","Is the flight on time? — ফ্লাইট কি সময়মতো?","My baggage is lost. — আমার ব্যাগেজ হারিয়ে গেছে।"] },
+          { heading:"হোটেলে", items:["I have a reservation. — আমার booking আছে।","Can I check in early? — আগে check in করতে পারি?","Can I have extra towels? — আরো তোয়ালে পাব?","The AC is not working. — AC কাজ করছে না।","What time is checkout? — চেকআউট কখন?"] },
+        ], tip:"পরের বার travel করলে সব কথা English এ বলার চেষ্টা করো।" },
+    ]
+  },
+  {
+    id:8, icon:"🏥", title:"জরুরি পরিস্থিতি", subtitle:"Emergency English",
+    lessons:[
+      { title:"ডাক্তার ও হাসপাতাল", content:"স্বাস্থ্য সম্পর্কিত জরুরি English বাক্য — এগুলো মুখস্থ রাখো:",
+        sections:[
+          { heading:"ডাক্তারের কাছে", items:["I am not feeling well. — আমি ভালো বোধ করছি না।","I have a headache. — আমার মাথা ব্যথা।","I have a fever. — আমার জ্বর।","My stomach hurts. — আমার পেট ব্যথা।","I am allergic to penicillin. — আমার পেনিসিলিনে অ্যালার্জি।","How long do I need to take this medicine? — কতদিন খেতে হবে?"] },
+          { heading:"জরুরি অবস্থায়", items:["Help! — সাহায্য করুন!","Call an ambulance! — অ্যাম্বুলেন্স ডাকুন!","There has been an accident. — একটা দুর্ঘটনা হয়েছে।","I need a doctor urgently. — আমার জরুরি ভিত্তিতে ডাক্তার দরকার।","Please call the police. — পুলিশ ডাকুন।"] },
+        ], tip:"এই বাক্যগুলো ভালো করে মুখস্থ করো — জরুরি সময়ে কাজে আসবে।" },
+    ]
+  },
+];
+
+const FLASHWORDS = [
+  { word:"Beautiful", bn:"সুন্দর", ex:"The flower is beautiful.", pron:"বিউটিফুল" },
+  { word:"Important", bn:"গুরুত্বপূর্ণ", ex:"This is very important.", pron:"ইম্পর্ট্যান্ট" },
+  { word:"Understand", bn:"বোঝা", ex:"I understand English now.", pron:"আন্ডারস্ট্যান্ড" },
+  { word:"Remember", bn:"মনে রাখা", ex:"Remember this rule always.", pron:"রিমেম্বার" },
+  { word:"Confident", bn:"আত্মবিশ্বাসী", ex:"Be confident when you speak!", pron:"কনফিডেন্ট" },
+  { word:"Practice", bn:"অনুশীলন", ex:"Practice makes perfect.", pron:"প্র্যাকটিস" },
+  { word:"Excellent", bn:"চমৎকার", ex:"Excellent work today!", pron:"এক্সেলেন্ট" },
+  { word:"Opportunity", bn:"সুযোগ", ex:"This is a great opportunity.", pron:"অপরচুনিটি" },
+  { word:"Experience", bn:"অভিজ্ঞতা", ex:"I have 3 years of experience.", pron:"এক্সপেরিয়েন্স" },
+  { word:"Success", bn:"সাফল্য", ex:"Hard work leads to success.", pron:"সাকসেস" },
+  { word:"Communicate", bn:"যোগাযোগ করা", ex:"I can communicate in English.", pron:"কমিউনিকেট" },
+  { word:"Improve", bn:"উন্নতি করা", ex:"I improve every day.", pron:"ইমপ্রুভ" },
+];
+
+const QUIZZES = [
+  { q:"\"আমার নাম রাহিম\" English এ কী?", opts:["My name is Rahim","I name Rahim","Name my Rahim","Rahim is my name"], a:0 },
+  { q:"\"Good morning\" মানে কী?", opts:["শুভ রাত্রি","শুভ বিকাল","শুভ সকাল","শুভেচ্ছা"], a:2 },
+  { q:"\"How are you?\" এর সঠিক উত্তর?", opts:["Yes, thank you","I am fine, thank you","How are you too","Fine is I"], a:1 },
+  { q:"\"এটার দাম কত?\" English এ?", opts:["What is price?","How much does this cost?","Give me price","Cost how much?"], a:1 },
+  { q:"Verb মানে কী?", opts:["নামবাচক শব্দ","ক্রিয়াবাচক শব্দ","বিশেষণ","সর্বনাম"], a:1 },
+  { q:"\"She goes to school\" এ Verb কোনটি?", opts:["She","goes","to","school"], a:1 },
+  { q:"Future tense এর সঠিক বাক্য?", opts:["I eat rice","I ate rice","I will eat rice","I eating rice"], a:2 },
+  { q:"\"Nice to meet you\" কখন বলা হয়?", opts:["বিদায়ের সময়","পরিচিত হওয়ার সময়","ধন্যবাদ জানাতে","সাহায্য চাইতে"], a:1 },
+  { q:"Noun মানে কী?", opts:["কাজবাচক শব্দ","নামবাচক শব্দ","বিশেষণ","সর্বনাম"], a:1 },
+  { q:"\"I did not go\" — এটা কোন Tense?", opts:["Present","Future","Past","Continuous"], a:2 },
+  { q:"\"Excuse me\" কখন বলা হয়?", opts:["ধন্যবাদ দিতে","মনোযোগ পেতে","বিদায় নিতে","খাবার অর্ডার দিতে"], a:1 },
+  { q:"\"Turn left\" মানে কী?", opts:["ডানে মোড় নাও","বাম দিকে মোড় নাও","সোজা যাও","পেছনে যাও"], a:1 },
+];
+
+// ============ SMART LOCAL AI TUTOR ============
+const AI_KB = {
+  verb: `🎯 Verb (ক্রিয়া) — বিস্তারিত
+
+Verb = এমন শব্দ যা কোনো কাজ, অবস্থা বা ঘটনা বোঝায়।
+
+📌 ৩ ধরনের Verb:
+
+1️⃣ Action Verb (কাজ বোঝায়)
+• Run (রান) — দৌড়ানো → He runs fast.
+• Eat (ইট) — খাওয়া → I eat rice.
+• Write (রাইট) — লেখা → She writes a letter.
+• Speak (স্পিক) — বলা → I speak English.
+
+2️⃣ Linking Verb (সংযোগ বোঝায়)
+• Is/Am/Are → I am a student.
+• Was/Were → She was happy.
+• Become → He became a doctor.
+
+3️⃣ Helping Verb (সাহায্য করে)
+• Do/Does → Do you eat rice?
+• Will → I will go tomorrow.
+• Can → I can speak English.
+• Have/Has → She has finished.
+
+💡 সহজ নিয়ম: বাক্যে যে কাজটা হচ্ছে সেটাই Verb!
+
+🗣️ উচ্চারণ: Verb = ভার্ব
+
+💪 Practice: আজকে ১০টা Verb বলো!`,
+
+  noun: `🎯 Noun (বিশেষ্য) — বিস্তারিত
+
+Noun = কোনো ব্যক্তি, স্থান, বস্তু বা ধারণার নাম।
+
+📌 ৪ ধরনের Noun:
+
+1️⃣ Proper Noun (নির্দিষ্ট নাম)
+• Rahim, Dhaka, Bangladesh, Google
+• সবসময় Capital letter দিয়ে শুরু!
+
+2️⃣ Common Noun (সাধারণ নাম)
+• Boy (ছেলে), School (স্কুল), Book (বই)
+• Water (পানি), Phone (ফোন)
+
+3️⃣ Abstract Noun (অনুভূতি)
+• Love (ভালোবাসা), Happiness (সুখ)
+• Freedom (স্বাধীনতা), Hope (আশা)
+
+4️⃣ Collective Noun (দল)
+• A team of players (একটি দল)
+• A class of students (একটি ক্লাস)
+
+💡 নিয়ম: যার নাম আছে সেটাই Noun!
+🗣️ উচ্চারণ: Noun = নাউন`,
+
+  adjective: `🎯 Adjective (বিশেষণ) — বিস্তারিত
+
+Adjective = Noun বা Pronoun কে বর্ণনা করার শব্দ।
+
+📌 কীভাবে ব্যবহার হয়:
+
+✅ Noun এর আগে:
+• Big house (বড় বাড়ি)
+• Beautiful flower (সুন্দর ফুল)
+• Hot water (গরম পানি)
+• Good boy (ভালো ছেলে)
+
+✅ Verb এর পরে:
+• The house is big. (বাড়িটা বড়।)
+• The flower looks beautiful. (ফুলটা সুন্দর দেখাচ্ছে।)
+
+📌 তুলনামূলক Adjective:
+• Big → Bigger → Biggest
+• Good → Better → Best
+• Bad → Worse → Worst
+• Beautiful → More beautiful → Most beautiful
+
+💡 নিয়ম: Noun-এর আগে বসে বর্ণনা করে!
+🗣️ উচ্চারণ: Adjective = অ্যাডজেক্টিভ`,
+
+  pronoun: `🎯 Pronoun (সর্বনাম) — বিস্তারিত
+
+Noun এর বদলে যে শব্দ ব্যবহার হয়।
+
+📌 Subject Pronoun (কর্তৃকারক):
+• I (আই) — আমি → I eat rice.
+• You (ইউ) — তুমি/আপনি → You are smart.
+• He (হি) — সে (পুরুষ) → He is tall.
+• She (শি) — সে (মহিলা) → She is kind.
+• It (ইট) — এটা (বস্তু) → It is hot.
+• We (উই) — আমরা → We are friends.
+• They (দে) — তারা → They are students.
+
+📌 Object Pronoun (কর্মকারক):
+• Me, You, Him, Her, It, Us, Them
+• → She loves him. (সে তাকে ভালোবাসে।)
+• → He called me. (সে আমাকে ডেকেছিল।)
+
+📌 Possessive Pronoun (অধিকার):
+• My (আমার), Your (তোমার), His (তার)
+• Her (তার-মেয়ে), Our (আমাদের), Their (তাদের)`,
+
+  tense: `⏰ Tense — সম্পূর্ণ গাইড
+
+📌 ৩টি মূল Tense × ৪ ধরন = ১২টি Tense
+
+🔵 Present (বর্তমান):
+• Simple: I eat. (প্রতিদিন খাই)
+• Continuous: I am eating. (এখন খাচ্ছি)
+• Perfect: I have eaten. (খেয়ে ফেলেছি)
+
+🟡 Past (অতীত):
+• Simple: I ate. (খেয়েছিলাম)
+• Continuous: I was eating. (খাচ্ছিলাম)
+• Perfect: I had eaten. (আগেই খেয়ে ফেলেছিলাম)
+
+🟢 Future (ভবিষ্যৎ):
+• Simple: I will eat. (খাবো)
+• Continuous: I will be eating. (খেতে থাকব)
+• Perfect: I will have eaten. (খেয়ে ফেলব)
+
+💡 সহজ ট্রিক:
+• এখন হচ্ছে = am/is/are + ing
+• আগে হয়েছে = ed / irregular form
+• পরে হবে = will + verb`,
+
+  present: `📌 Present Tense — বিস্তারিত
+
+✅ Simple Present (অভ্যাস বোঝায়):
+• I eat rice every day. (প্রতিদিন ভাত খাই)
+• She goes to school. (সে স্কুলে যায়)
+• They play cricket. (তারা ক্রিকেট খেলে)
+• নিয়ম: He/She/It → Verb+s/es
+
+✅ Present Continuous (এখন হচ্ছে):
+• I am eating now. (এখন খাচ্ছি)
+• She is studying. (সে পড়ছে)
+• They are playing. (তারা খেলছে)
+• নিয়ম: am/is/are + Verb+ing
+
+✅ Present Perfect (সবে শেষ হলো):
+• I have eaten. (খেয়ে ফেলেছি)
+• She has gone. (সে চলে গেছে)
+• নিয়ম: have/has + past participle
+
+💡 Practice:
+সকালে উঠে বলো: "I am waking up. I eat breakfast every morning."`,
+
+  past: `📌 Past Tense — বিস্তারিত
+
+✅ Simple Past (শেষ হয়ে গেছে):
+Regular Verb → Verb+ed:
+• Work→Worked, Play→Played, Walk→Walked
+
+Irregular Verb (মুখস্থ করো):
+• Go→Went, Eat→Ate, See→Saw
+• Come→Came, Buy→Bought, Say→Said
+• Give→Gave, Take→Took, Make→Made
+
+📌 বাক্য:
+• I went to market yesterday. (গতকাল বাজারে গিয়েছিলাম)
+• She ate chicken. (সে চিকেন খেয়েছিল)
+• We watched a movie. (আমরা সিনেমা দেখেছিলাম)
+
+✅ Past Continuous (চলছিল):
+• I was eating. (খাচ্ছিলাম)
+• She was sleeping. (ঘুমাচ্ছিল)
+
+💡 Negative Past:
+• I did not go. (আমি যাইনি)
+• She did not eat. (সে খায়নি)`,
+
+  future: `📌 Future Tense — বিস্তারিত
+
+✅ Simple Future (হবে):
+• I will eat rice. (ভাত খাবো)
+• She will go tomorrow. (সে কাল যাবে)
+• We will win. (আমরা জিতব)
+• নিয়ম: will + base verb
+
+✅ Future Continuous (চলতে থাকবে):
+• I will be eating. (খেতে থাকব)
+• She will be studying. (পড়তে থাকবে)
+
+✅ Going to Future (plan আছে):
+• I am going to buy a phone. (ফোন কিনব বলে plan করেছি)
+• She is going to visit Dhaka. (ঢাকা যাবে বলে ঠিক করেছে)
+
+📌 Negative Future:
+• I will not go. (আমি যাবো না)
+• She will not come. (সে আসবে না)
+
+💡 Practice:
+আজকের plan বলো: "Tomorrow I will wake up at 7. I will have breakfast at 8..."`,
+
+  grammar: `📚 English Grammar — সম্পূর্ণ Overview
+
+Grammar হলো English বলার ও লেখার নিয়মকানুন।
+
+📌 মূল ৮টি Parts of Speech:
+1️⃣ Noun (বিশেষ্য) — Book, School, Love
+2️⃣ Pronoun (সর্বনাম) — I, You, He, She
+3️⃣ Verb (ক্রিয়া) — Go, Eat, Love
+4️⃣ Adjective (বিশেষণ) — Big, Good, Beautiful
+5️⃣ Adverb (ক্রিয়াবিশেষণ) — Fast, Well, Very
+6️⃣ Preposition — In, On, At, Of, For
+7️⃣ Conjunction — And, But, Or, Because
+8️⃣ Interjection — Oh!, Wow!, Ouch!
+
+📌 Sentence Structure:
+• Subject + Verb + Object
+• I eat rice. ✓
+• She loves music. ✓
+
+📌 Tense: Past / Present / Future
+
+💡 কোনটা বিস্তারিত জানতে চাও?
+লিখো: "Noun শেখাও" বা "Tense শেখাও" বা "Adjective বোঝাও"`,
+
+  sentence: `✍️ Sentence বানানোর নিয়ম — বিস্তারিত
+
+📌 মূল সূত্র: Subject + Verb + Object
+
+✅ Positive বাক্য:
+• I eat rice. (আমি ভাত খাই)
+• She loves music. (সে সঙ্গীত ভালোবাসে)
+• We play cricket. (আমরা ক্রিকেট খেলি)
+• He reads books every night. (সে প্রতি রাতে বই পড়ে)
+
+✅ Negative বাক্য (না বলতে):
+• I do not eat rice. (আমি ভাত খাই না)
+• She does not go. (সে যায় না)
+• He did not come. (সে আসেনি)
+
+✅ Question বাক্য:
+• Do you eat rice? (তুমি কি ভাত খাও?)
+• Does she go to school? (সে কি স্কুলে যায়?)
+• Did he come? (সে কি এসেছিল?)
+
+📌 Question Words:
+• What (কী), Where (কোথায়), When (কখন)
+• Who (কে), Why (কেন), How (কীভাবে)
+
+💡 Practice: প্রতিদিন ৫টা নতুন বাক্য বানাও!`,
+
+  interview: `💼 Job Interview — Complete Guide
+
+📌 শুরুতে বলো (Opening):
+• Good morning, sir/madam. I am [তোমার নাম].
+• Thank you for giving me this opportunity.
+• I am very happy and excited to be here today.
+
+📌 নিজের সম্পর্কে (Tell me about yourself):
+• I am [নাম]. I am from [শহর].
+• I have [X] years of experience in [field].
+• I am hardworking, dedicated and a quick learner.
+• My greatest strength is [teamwork/communication/problem-solving].
+• I am very passionate about my work.
+
+📌 কেন এই চাকরি চাও:
+• I want to grow with this company.
+• I believe my skills match this position perfectly.
+• I have always admired this company's work.
+
+📌 Weakness জিজ্ঞেস করলে:
+• Sometimes I work too hard. (হাসিমুখে বলো)
+• I am working on improving my public speaking.
+
+📌 শেষে বলো:
+• Thank you so much for your time.
+• I am very interested in joining your team.
+• When can I expect to hear from you?
+
+💡 এই বাক্যগুলো ১০ বার আয়নার সামনে বলো!`,
+
+  daily: `🗣️ Daily Conversation — পুরো Guide
+
+📌 সকাল থেকে রাত পর্যন্ত:
+
+🌅 সকালে:
+• Good morning! How did you sleep?
+• I woke up at 7 today.
+• The weather is nice today.
+
+🌞 দিনে অফিস/স্কুলে:
+• Good morning everyone!
+• Can I have a moment of your time?
+• I have a question about this.
+• Let me explain this to you.
+• I understand. Thank you.
+
+🍽️ খাওয়ার সময়:
+• Are you hungry? Shall we eat?
+• What would you like to eat?
+• This is delicious!
+• I am full, thank you.
+
+🌙 রাতে:
+• How was your day?
+• I am tired. I need to rest.
+• Good night! Sleep well.
+• See you tomorrow!
+
+📱 ফোনে:
+• Hello, who is this?
+• Can I speak to [name]?
+• I will call you back later.
+• Sorry, I missed your call.
+
+💡 প্রতিদিন এই বাক্যগুলো use করার চেষ্টা করো!`,
+
+  conversation: `🗣️ English Conversation — শুরু করার উপায়
+
+📌 কথা শুরু করতে:
+• Hi! How are you? (হাই! কেমন আছ?)
+• What's up? (কী খবর? — casual)
+• Long time no see! (অনেকদিন দেখিনি!)
+• How have you been? (কেমন ছিলে?)
+
+📌 কথা চালিয়ে যেতে:
+• Really? Tell me more. (সত্যি? আরো বলো।)
+• That's interesting! (সেটা interesting!)
+• I know what you mean. (বুঝতে পারছি।)
+• What do you think? (তুমি কী মনে করো?)
+
+📌 বুঝতে না পারলে:
+• Sorry, can you repeat that? (আবার বলবে?)
+• Can you speak slowly please? (একটু ধীরে বলবে?)
+• What do you mean by that? (এটা দিয়ে কী বোঝাচ্ছ?)
+
+📌 কথা শেষ করতে:
+• It was nice talking to you! (কথা বলে ভালো লাগলো!)
+• I have to go now. Take care!
+• See you soon! Goodbye!
+
+💡 Tip: প্রতিদিন ১ জনের সাথে English এ কথা বলার চেষ্টা করো!`,
+
+  hello: `👋 Greetings — সব ধরনের অভিবাদন
+
+📌 Formal Greetings (আনুষ্ঠানিক):
+• Good morning, sir. (গুড মর্নিং, স্যার)
+• Good afternoon, madam. (গুড আফটারনুন, ম্যাডাম)
+• How do you do? (হাউ ডু ইউ ডু?) — খুব formal
+• It is a pleasure to meet you. (দেখা হয়ে সম্মান হলো।)
+
+📌 Informal Greetings (অনানুষ্ঠানিক):
+• Hi! (হাই!) — সবচেয়ে common
+• Hey! (হেই!) — বন্ধুদের সাথে
+• What's up? (হোয়াটস আপ?) — কী খবর?
+• Howdy! — আমেরিকান casual style
+
+📌 Response:
+• I am fine, thank you. And you?
+• Not bad, thanks!
+• Pretty good, thanks!
+• I am doing great!
+
+📌 Goodbye বলার উপায়:
+• Goodbye! (বিদায়)
+• See you later! (পরে দেখা হবে)
+• Take care! (সাবধানে থেকো)
+• Have a nice day! (ভালো দিন কাটাও)
+• Catch you later! (পরে কথা হবে)
+
+💡 Practice: আজকে ৩ জনকে English এ Hello বলো!`,
+
+  shopping: `🛍️ Shopping English — পুরো Guide
+
+📌 দোকানে ঢুকে:
+• Excuse me, can you help me? (সাহায্য করবেন?)
+• I am looking for [item]. ([item] খুঁজছি।)
+• Do you have this in blue? (নীল রঙে আছে?)
+• What size do you have? (কোন size আছে?)
+
+📌 দাম জিজ্ঞেস করতে:
+• How much does this cost? (দাম কত?)
+• What is the price of this? (এটার মূল্য কত?)
+• Is this on sale? (এটা কি sale এ আছে?)
+• Can you give me a discount? (ছাড় দেবেন?)
+
+📌 কেনার সময়:
+• I will take this one. (এটাই নেব।)
+• Can I try this on? (পরে দেখতে পারি?)
+• This is too expensive. (এটা বেশি দামি।)
+• Do you have something cheaper? (সস্তা কিছু আছে?)
+
+📌 Payment:
+• How much is the total? (মোট কত?)
+• Can I pay by card? (কার্ডে দিতে পারব?)
+• Do you have change for 500? (৫০০ ভাঙতি আছে?)
+• Here is the money. Keep the change. (বাকিটা রেখে দিন।)
+
+💡 পরের বার কেনাকাটায় এগুলো use করো!`,
+
+  food: `🍽️ Food & Restaurant English
+
+📌 রেস্টুরেন্টে ঢুকে:
+• A table for two, please. (দুইজনের টেবিল চাই।)
+• Can I see the menu? (মেনু দেখাবেন?)
+• Is this table free? (এই টেবিল খালি?)
+
+📌 Order দিতে:
+• I would like chicken curry, please.
+• Can I have rice and dal?
+• What do you recommend? (কী recommend করবেন?)
+• Is this spicy? (এটা কি ঝাল?)
+• No spicy please. (ঝাল দেবেন না।)
+• Extra rice please. (আরো ভাত দেবেন।)
+
+📌 খাওয়ার সময়:
+• This is delicious! (এটা অনেক মজাদার!)
+• Can I have some water please? (পানি দেবেন?)
+• Can I have the bill please? (বিল দেবেন?)
+• Keep the change. (বাকিটা রেখে দিন।)
+
+📌 খাবারের নাম English এ:
+• Rice (ভাত), Fish (মাছ), Chicken (মুরগি)
+• Egg (ডিম), Bread (রুটি), Milk (দুধ)
+• Vegetables (সবজি), Curry (তরকারি)
+
+💡 Food delivery app এ English এ order দেওয়ার চেষ্টা করো!`,
+
+  travel: `✈️ Travel English — Complete Guide
+
+📌 এয়ারপোর্টে:
+• Where is the check-in counter? (চেক-ইন কোথায়?)
+• I have a reservation. My name is [নাম].
+• Window seat please. (জানালার পাশের সিট চাই।)
+• What is the gate number? (গেট নম্বর কত?)
+• My flight is delayed. (ফ্লাইট দেরি হচ্ছে।)
+• My baggage is lost! (আমার ব্যাগ হারিয়ে গেছে!)
+
+📌 হোটেলে:
+• I have a booking. (আমার booking আছে।)
+• Can I check in now? (এখন check in করতে পারি?)
+• What time is checkout? (চেকআউট কখন?)
+• The AC is not working. (AC কাজ করছে না।)
+• Can I have an extra pillow? (আরো একটা বালিশ দেবেন?)
+
+📌 শহরে ঘুরতে:
+• Excuse me, where is the market? (বাজার কোথায়?)
+• How far is it? (কতটা দূরে?)
+• Can you take me to [place]? ([জায়গা]য় নিয়ে যাবেন?)
+• How much is the fare? (ভাড়া কত?)
+
+💡 Google Maps English এ use করো — অনেক শিখতে পারবে!`,
+
+  direction: `🗺️ Directions English — রাস্তা বলা ও জিজ্ঞেস করা
+
+📌 জিজ্ঞেস করতে:
+• Excuse me, where is the hospital? (হাসপাতাল কোথায়?)
+• How do I get to the station? (স্টেশন যাব কীভাবে?)
+• Is it far from here? (এখান থেকে কি দূরে?)
+• Can you show me on the map? (ম্যাপে দেখাবেন?)
+
+📌 Direction দিতে:
+• Go straight. (সোজা যান।)
+• Turn left at the traffic light. (ট্রাফিক লাইটে বামে মোড় নিন।)
+• Turn right at the corner. (কোণায় ডানে মোড় নিন।)
+• It is on your left/right. (বাম/ডান দিকে আছে।)
+• You will see it on the left side. (বাম দিকে দেখতে পাবেন।)
+• It is about 5 minutes walk. (হেঁটে ৫ মিনিট।)
+• Take a U-turn. (U-turn নিন।)
+
+📌 Transport:
+• Where is the bus stop? (বাস স্টপ কোথায়?)
+• Which bus goes to [place]? (কোন বাস [জায়গায়] যায়?)
+• Is there an auto/rickshaw nearby? (কাছে অটো/রিকশা আছে?)
+
+💡 Google Maps English এ use করো!`,
+
+  health: `🏥 Health & Medical English
+
+📌 ডাক্তারের কাছে:
+• I am not feeling well. (ভালো বোধ করছি না।)
+• I have a headache. (মাথা ব্যথা।)
+• I have a high fever. (বেশি জ্বর।)
+• My stomach hurts badly. (পেট অনেক ব্যথা।)
+• I have been coughing for 3 days. (৩ দিন ধরে কাশি।)
+• I feel dizzy. (মাথা ঘুরছে।)
+• I can not sleep at night. (রাতে ঘুম হচ্ছে না।)
+
+📌 ডাক্তার জিজ্ঞেস করতে পারে:
+• When did it start? (কখন থেকে শুরু হলো?)
+• How bad is the pain from 1 to 10? (ব্যথা কতটা?)
+• Are you allergic to any medicine? (কোনো medicine এ কি allergy আছে?)
+
+📌 উত্তর দিতে:
+• It started yesterday. (গতকাল থেকে।)
+• The pain is about 7. (ব্যথা অনেকটা।)
+• I am allergic to penicillin. (পেনিসিলিনে allergy আছে।)
+
+📌 জরুরি অবস্থায়:
+• Call an ambulance immediately! (অ্যাম্বুলেন্স ডাকো!)
+• I need help urgently! (জরুরি সাহায্য দরকার!)
+
+💡 এই বাক্যগুলো মুখস্থ রাখো!`,
+
+  office: `💼 Office & Professional English
+
+📌 Meeting এ:
+• Good morning/afternoon everyone.
+• Shall we get started? (শুরু করা যাক?)
+• I have a few points to discuss. (কিছু বিষয় আলোচনা করতে চাই।)
+• Can everyone hear me clearly? (সবাই শুনতে পাচ্ছেন?)
+• I agree with your point. (আপনার সাথে একমত।)
+• I respectfully disagree. (সম্মানের সাথে দ্বিমত।)
+• Can we table this for later? (পরে আলোচনা করা যাবে?)
+• Let us wrap up. (শেষ করা যাক।)
+
+📌 Email:
+• Subject: Meeting Request — [তারিখ]
+• Dear [Name], I hope you are well.
+• I am writing to inform you about...
+• Please find the attached document.
+• Kindly let me know your availability.
+• Looking forward to your response.
+• Best regards, [তোমার নাম]
+
+📌 Phone Call:
+• Hello, this is [নাম] calling.
+• May I speak to [নাম] please?
+• I will call back in 10 minutes.
+• I will send you a follow-up email.
+
+💡 কাজের সব communication English এ করার চেষ্টা করো!`,
+
+  number: `🔢 Numbers — সংখ্যা সম্পূর্ণ গাইড
+
+📌 ১ থেকে ২০:
+1-One, 2-Two, 3-Three, 4-Four, 5-Five
+6-Six, 7-Seven, 8-Eight, 9-Nine, 10-Ten
+11-Eleven, 12-Twelve, 13-Thirteen, 14-Fourteen
+15-Fifteen, 16-Sixteen, 17-Seventeen
+18-Eighteen, 19-Nineteen, 20-Twenty
+
+📌 দশ দশ:
+30-Thirty, 40-Forty, 50-Fifty
+60-Sixty, 70-Seventy, 80-Eighty, 90-Ninety
+
+📌 বড় সংখ্যা:
+100-One hundred, 1000-One thousand
+10000-Ten thousand, 100000-One lakh/One hundred thousand
+1000000-One million
+
+📌 Ordinal Numbers (ক্রম):
+1st-First, 2nd-Second, 3rd-Third
+4th-Fourth, 5th-Fifth, 6th-Sixth
+10th-Tenth, 20th-Twentieth, 100th-Hundredth
+
+📌 দাম বলতে:
+• This costs 500 taka. (Five hundred taka.)
+• The price is 1200. (Twelve hundred.)
+
+💡 বাজারে দাম English এ বলার চেষ্টা করো!`,
+
+  color: `🎨 Colors — রঙের নাম ও ব্যবহার
+
+📌 Basic Colors:
+• Red (রেড) — লাল 🔴
+• Blue (ব্লু) — নীল 🔵
+• Green (গ্রিন) — সবুজ 🟢
+• Yellow (ইয়েলো) — হলুদ 🟡
+• White (হোয়াইট) — সাদা ⚪
+• Black (ব্ল্যাক) — কালো ⚫
+• Orange (অরেঞ্জ) — কমলা 🟠
+• Pink (পিংক) — গোলাপি 🩷
+• Purple (পার্পল) — বেগুনি 💜
+• Brown (ব্রাউন) — বাদামী 🟤
+• Grey (গ্রে) — ধূসর
+• Golden (গোল্ডেন) — সোনালী
+
+📌 বাক্যে ব্যবহার:
+• I like blue colour.
+• She is wearing a red dress.
+• The sky is blue.
+• The grass is green.
+• I have a black phone.
+
+📌 Shades:
+• Light blue (হালকা নীল)
+• Dark green (গাঢ় সবুজ)
+• Bright red (উজ্জ্বল লাল)
+
+💡 আজকের পোশাকের রঙ English এ বলো!`,
+
+  family: `👨‍👩‍👧‍👦 Family — পরিবারের সদস্য
+
+📌 Primary Family (মূল পরিবার):
+• Father (ফাদার) — বাবা
+• Mother (মাদার) — মা
+• Brother (ব্রাদার) — ভাই
+• Sister (সিস্টার) — বোন
+• Son (সান) — ছেলে
+• Daughter (ডটার) — মেয়ে
+• Husband (হাজবেন্ড) — স্বামী
+• Wife (ওয়াইফ) — স্ত্রী
+
+📌 Extended Family (বড় পরিবার):
+• Grandfather (গ্র্যান্ডফাদার) — দাদা/নানা
+• Grandmother (গ্র্যান্ডমাদার) — দাদি/নানি
+• Uncle (আঙ্কেল) — চাচা/মামা
+• Aunt (আন্ট) — চাচি/মামি
+• Cousin (কাজিন) — চাচাতো/মামাতো ভাই-বোন
+• Nephew (নেফিউ) — ভাইপো
+• Niece (নিস) — ভাইঝি
+
+📌 বাক্য:
+• My father is a doctor.
+• I have two brothers and one sister.
+• My grandmother lives with us.
+• We are a big happy family.
+
+💡 পরিবারের সবাইকে English এ পরিচয় করিয়ে দাও!`,
+
+  question: `❓ Question Words — প্রশ্ন করার সম্পূর্ণ গাইড
+
+📌 ৭টি গুরুত্বপূর্ণ Question Words:
+
+• What (হোয়াট) — কী/কোনটা
+  → What is your name? (তোমার নাম কী?)
+  → What do you do? (তুমি কী করো?)
+
+• Where (হোয়ার) — কোথায়
+  → Where do you live? (কোথায় থাকো?)
+  → Where is the bathroom? (বাথরুম কোথায়?)
+
+• When (হোয়েন) — কখন
+  → When is your birthday? (জন্মদিন কখন?)
+  → When will you come? (কখন আসবে?)
+
+• Who (হু) — কে
+  → Who is your teacher? (তোমার শিক্ষক কে?)
+  → Who called you? (তোমাকে কে ডেকেছিল?)
+
+• Why (হোয়াই) — কেন
+  → Why are you late? (কেন দেরি হলো?)
+  → Why did you leave? (কেন চলে গেলে?)
+
+• How (হাউ) — কীভাবে
+  → How are you? (কেমন আছো?)
+  → How did you do it? (কীভাবে করলে?)
+
+• Which (হুইচ) — কোনটা
+  → Which one do you prefer? (কোনটা পছন্দ?)
+
+💡 এই ৭টি শব্দ মুখস্থ করলে যেকোনো প্রশ্ন করতে পারবে!`,
+
+  preposition: `📌 Prepositions — সম্পর্কবাচক শব্দ
+
+Preposition = দুটো জিনিসের মধ্যে সম্পর্ক বোঝায়।
+
+📌 সবচেয়ে গুরুত্বপূর্ণ Prepositions:
+
+📍 স্থান বোঝায়:
+• In (ভেতরে) → The book is in the bag.
+• On (উপরে) → The cup is on the table.
+• At (নির্দিষ্ট জায়গায়) → I am at school.
+• Under (নিচে) → The cat is under the chair.
+• Behind (পেছনে) → He is behind me.
+• In front of (সামনে) → She is in front of me.
+
+📍 সময় বোঝায়:
+• At (নির্দিষ্ট সময়) → At 5 pm, at noon
+• On (দিন) → On Monday, on Friday
+• In (মাস/বছর) → In January, in 2024
+
+📌 বাক্যে:
+• I live in Dhaka.
+• The meeting is at 10 am.
+• We met on Sunday.
+• He is sitting under the tree.
+
+💡 Practice: ঘরের জিনিসপত্রের অবস্থান English এ বলো!`,
+
+  motivation: `💪 তোমাকে উৎসাহ দিতে চাই!
+
+English শেখার সবচেয়ে বড় সত্য হলো:
+
+🌟 সবাই শুরুতে ভুল করে — এটাই স্বাভাবিক!
+
+📌 যারা দ্রুত English শিখেছে তাদের secret:
+
+1️⃣ প্রতিদিন একটু একটু করে
+   → ১ মাসে ৩০টা নতুন বিষয় শেখা হয়!
+
+2️⃣ ভুলকে ভয় না পাওয়া
+   → ভুল = learning opportunity
+
+3️⃣ শুধু পড়া না — বলাও
+   → আয়নার সামনে প্রতিদিন কথা বলো
+
+4️⃣ English media দেখা
+   → YouTube, Netflix English সাবটাইটেল সহ
+
+5️⃣ নোটবুক রাখা
+   → প্রতিদিন ৫টা নতুন শব্দ লেখো
+
+🎯 তোমার জন্য আজকের Challenge:
+আয়নার সামনে দাঁড়াও এবং বলো:
+"Hello! My name is [নাম]. I am learning English. I will speak English fluently very soon!"
+
+💡 তুমি পারবেই! Indian English হলেও চলবে — confident থাকো! 🌟`,
+
+  default_responses: [
+    `🤔 তুমি জিজ্ঞেস করলেছ সম্পর্কে।
+
+চলো এটা সহজে বুঝি:
+
+📌 English এ যেকোনো কথা বলতে মনে রেখো:
+Subject + Verb + Object
+
+উদাহরণ:
+• I (আমি) + want (চাই) + water (পানি)
+→ I want water.
+
+• She (সে) + is going (যাচ্ছে) + to market (বাজারে)
+→ She is going to market.
+
+💡 আরো specific প্রশ্ন করো, যেমন:
+• "Verb কী বোঝাও"
+• "Tense শেখাও"
+• "Interview এ কীভাবে কথা বলব?"
+• "Daily conversation শেখাও"
+
+📚 Book Tab এও সব বিস্তারিত পাবে! 💪`,
+    `✨ ভালো প্রশ্ন!
+
+English শেখার journey তে তুমি এগিয়ে যাচ্ছ — এটাই সবচেয়ে গুরুত্বপূর্ণ!
+
+🎯 আজকের জন্য একটা practical tip:
+
+প্রতিদিন এই ৩টা sentence বলো:
+1. "Today I will learn something new." (আজ নতুন কিছু শিখব।)
+2. "I am getting better every day." (প্রতিদিন আরো ভালো হচ্ছি।)
+3. "I can speak English." (আমি English বলতে পারি।)
+
+📌 আমাকে এভাবে প্রশ্ন করো:
+• "Noun বিস্তারিত বোঝাও"
+• "Shopping English শেখাও"
+• "ডাক্তারের কাছে কী বলব?"
+• "রাস্তা জিজ্ঞেস করব কীভাবে?"
+
+চেষ্টা করতে থাকো! 🌟`,
+    `💡 এই বিষয়ে জানতে চাওয়া খুবই ভালো সিদ্ধান্ত!
+
+English শেখা যাত্রায় সবচেয়ে কার্যকর উপায় হলো:
+
+🔵 শোনো (Listen): English গান, podcast, YouTube
+🟡 বলো (Speak): আয়নার সামনে প্রতিদিন
+🟢 পড়ো (Read): English newspaper, articles
+🔴 লেখো (Write): প্রতিদিন ৫টা বাক্য
+
+📌 আমাকে জিজ্ঞেস করো:
+• "Preposition শেখাও"
+• "Question words বোঝাও"
+• "Travel English শেখাও"
+• "Family সম্পর্কে কথা বলব কীভাবে?"
+
+💪 তুমি পারবে!`,
+  ]
+};
+
+function getAIReply(msg, history) {
+  const m = msg.toLowerCase().trim();
+  // Match topics
+  if (m.includes("verb") || m.includes("ক্রিয়া")) return AI_KB.verb;
+  if (m.includes("noun") || m.includes("বিশেষ্য") || m.includes("নাউন")) return AI_KB.noun;
+  if (m.includes("adjective") || m.includes("বিশেষণ")) return AI_KB.adjective;
+  if (m.includes("pronoun") || m.includes("সর্বনাম")) return AI_KB.pronoun;
+  if ((m.includes("present") && m.includes("tense")) || m.includes("বর্তমান কাল")) return AI_KB.present;
+  if ((m.includes("past") && m.includes("tense")) || m.includes("অতীত কাল")) return AI_KB.past;
+  if ((m.includes("future") && m.includes("tense")) || m.includes("ভবিষ্যৎ")) return AI_KB.future;
+  if (m.includes("tense") || m.includes("টেন্স")) return AI_KB.tense;
+  if (m.includes("grammar") || m.includes("গ্রামার")) return AI_KB.grammar;
+  if (m.includes("sentence") || m.includes("বাক্য")) return AI_KB.sentence;
+  if (m.includes("interview") || m.includes("ইন্টারভিউ") || m.includes("job") || m.includes("চাকরি")) return AI_KB.interview;
+  if (m.includes("daily") || m.includes("conversation") || m.includes("কথোপকথন") || m.includes("কথা বল")) return AI_KB.conversation;
+  if (m.includes("greeting") || m.includes("hello") || m.includes("hi ") || m.includes("অভিবাদন")) return AI_KB.hello;
+  if (m.includes("shopping") || m.includes("কেনাকাটা") || m.includes("বাজার") || m.includes("দোকান")) return AI_KB.shopping;
+  if (m.includes("food") || m.includes("খাবার") || m.includes("restaurant") || m.includes("রেস্টুরেন্ট")) return AI_KB.food;
+  if (m.includes("travel") || m.includes("ভ্রমণ") || m.includes("airport") || m.includes("hotel")) return AI_KB.travel;
+  if (m.includes("direction") || m.includes("রাস্তা") || m.includes("পথ") || m.includes("কোথায়")) return AI_KB.direction;
+  if (m.includes("health") || m.includes("doctor") || m.includes("ডাক্তার") || m.includes("hospital") || m.includes("অসুস্থ")) return AI_KB.health;
+  if (m.includes("office") || m.includes("email") || m.includes("meeting") || m.includes("professional")) return AI_KB.office;
+  if (m.includes("number") || m.includes("সংখ্যা") || m.includes("গণনা")) return AI_KB.number;
+  if (m.includes("color") || m.includes("colour") || m.includes("রঙ")) return AI_KB.color;
+  if (m.includes("family") || m.includes("পরিবার") || m.includes("mother") || m.includes("father")) return AI_KB.family;
+  if (m.includes("question") || m.includes("প্রশ্ন") || m.includes("what") || m.includes("where") || m.includes("when") || m.includes("how to ask")) return AI_KB.question;
+  if (m.includes("preposition") || m.includes("in ") || m.includes("on ") || m.includes("at ")) return AI_KB.preposition;
+  if (m.includes("পারছি না") || m.includes("ভয়") || m.includes("লজ্জা") || m.includes("কঠিন") || m.includes("motivat")) return AI_KB.motivation;
+  // Use history to avoid repeating last default
+  const lastDefault = history.filter(h => h.role === "ai").length % AI_KB.default_responses.length;
+  const dr = AI_KB.default_responses[lastDefault];
+  return dr.replace("সম্পর্কে", `"${msg}" সম্পর্কে`);
+}
+
+function speak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "en-IN";
+  u.rate = 0.85;
+  const voices = window.speechSynthesis.getVoices();
+  const indian = voices.find(v => v.lang === "en-IN") || voices.find(v => v.name.includes("India")) || voices.find(v => v.lang.startsWith("en"));
+  if (indian) u.voice = indian;
+  window.speechSynthesis.speak(u);
+}
+
+export default function App() {
+  const [tab, setTab] = useState("home");
+  const [xp, setXp] = useState(120);
+  const [streak] = useState(3);
+
+  // Book
+  const [chapter, setChapter] = useState(null);
+  const [lesson, setLesson] = useState(null);
+
+  // Flashcard
+  const [wIdx, setWIdx] = useState(0);
+  const [wFlip, setWFlip] = useState(false);
+
+  // Quiz
+  const [qIdx, setQIdx] = useState(0);
+  const [qScore, setQScore] = useState(0);
+  const [qAns, setQAns] = useState(null);
+  const [qDone, setQDone] = useState(false);
+
+  // AI Chat — full conversation history
+  const [msgs, setMsgs] = useState([
+    { role:"ai", text:"আস্সালামু আলাইকুম! 👋\n\nআমি তোমার AI English শিক্ষক — যেকোনো প্রশ্ন করো, সঠিক ও বিস্তারিত উত্তর পাবে!\n\n💡 উদাহরণ:\n• Verb কী বিস্তারিত বোঝাও\n• Present tense শেখাও\n• Interview এ কী বলব?\n• 'I am sorry' কখন বলব?\n• Sentence কীভাবে বানাব?" }
+  ]);
+  const [aiHistory, setAiHistory] = useState([]); // For API
+  const [input, setInput] = useState("");
+  const [thinking, setThinking] = useState(false);
+  const chatEnd = useRef(null);
+
+  useEffect(() => { chatEnd.current?.scrollIntoView({ behavior:"smooth" }); }, [msgs]);
+
+  async function sendMsg() {
+    if (!input.trim() || thinking) return;
+    const q = input.trim();
+    setInput("");
+    setMsgs(p => [...p, { role:"user", text:q }]);
+    setThinking(true);
+
+    const newHistory = [...aiHistory, { role:"user", content:q }];
+    setAiHistory(newHistory);
+
+    try {
+      const reply = await callAI(newHistory);
+      if (reply) {
+        setMsgs(p => [...p, { role:"ai", text:reply }]);
+        setAiHistory(h => [...h, { role:"assistant", content:reply }]);
+        setXp(x => x + 5);
+      } else {
+        throw new Error("no reply");
+      }
+    } catch {
+      // Fallback local reply
+      setMsgs(p => [...p, { role:"ai", text:"⚠️ এই মুহূর্তে AI সংযোগ নেই।\n\nকিন্তু তুমি এই বিষয়গুলো জিজ্ঞেস করতে পারো এবং আমি চেষ্টা করব:\n\n📚 Book Tab এ ৮টি Chapter আছে — সেখানে সব বিস্তারিত শেখো!\n\n💡 আবার চেষ্টা করো কিছুক্ষণ পর।" }]);
+    }
+    setThinking(false);
+  }
+
+  function answerQ(i) {
+    if (qAns !== null) return;
+    setQAns(i);
+    if (i === QUIZZES[qIdx].a) { setQScore(s => s+1); setXp(x => x+10); }
+  }
+
+  const TABS = [
+    { id:"home", icon:"🏠", label:"হোম" },
+    { id:"book", icon:"📖", label:"বই" },
+    { id:"words", icon:"📝", label:"শব্দ" },
+    { id:"quiz", icon:"🧠", label:"Quiz" },
+    { id:"ai", icon:"🤖", label:"AI শিক্ষক" },
+  ];
+
+  return (
+    <div style={{ fontFamily:"'Hind Siliguri',sans-serif", background:"#0f0f1a", minHeight:"100vh", color:"#fff", maxWidth:480, margin:"0 auto", paddingBottom:80 }}>
+      <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+
+      {/* Header */}
+      <div style={{ background:"linear-gradient(135deg,#6c3de0,#a855f7)", padding:"16px 18px 12px", position:"sticky", top:0, zIndex:50 }}>
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+          <div>
+            <div style={{ fontSize:20, fontWeight:700 }}>🇧🇩 ইংলিশ শিখি</div>
+            <div style={{ fontSize:11, opacity:0.85, marginTop:1 }}>শুরু থেকে Fluent — AI শিক্ষক সহ</div>
+          </div>
+          <div style={{ display:"flex", gap:8 }}>
+            <div style={{ background:"rgba(255,255,255,0.18)", borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:600 }}>🔥 {streak}</div>
+            <div style={{ background:"rgba(255,215,0,0.25)", borderRadius:20, padding:"5px 12px", fontSize:12, fontWeight:600, color:"#fde68a" }}>⭐ {xp}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* HOME */}
+      {tab==="home" && (
+        <div style={{ padding:"16px 14px" }}>
+          <div style={{ background:"linear-gradient(135deg,#1e1b4b,#2d1b69)", borderRadius:16, padding:16, marginBottom:12 }}>
+            <div style={{ fontSize:13, fontWeight:600, color:"#c4b5fd", marginBottom:10 }}>তোমার অগ্রগতি</div>
+            <div style={{ display:"flex", justifyContent:"space-around" }}>
+              {[["📖","8","Chapter"],["🧠",QUIZZES.length,"Quiz"],["💬",msgs.length-1,"প্রশ্ন"],["⭐",xp,"XP"]].map(([ic,v,l])=>(
+                <div key={l} style={{ textAlign:"center" }}>
+                  <div style={{ fontSize:22 }}>{ic}</div>
+                  <div style={{ fontSize:18, fontWeight:700, color:"#a78bfa" }}>{v}</div>
+                  <div style={{ fontSize:11, opacity:0.7 }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div style={{ fontSize:13, fontWeight:600, color:"#c4b5fd", marginBottom:10 }}>দ্রুত শুরু করো</div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:10, marginBottom:12 }}>
+            {[
+              { icon:"📖", title:"Full English বই", sub:"৮টি Chapter", color:"#6c3de0", bg:"#1e1b4b", go:"book" },
+              { icon:"🤖", title:"AI শিক্ষক", sub:"যেকোনো প্রশ্ন", color:"#db2777", bg:"#1a0a14", go:"ai" },
+              { icon:"📝", title:"শব্দ শেখো", sub:"Flashcard", color:"#059669", bg:"#052e16", go:"words" },
+              { icon:"🧠", title:"Quiz দাও", sub:"নিজেকে যাচাই", color:"#d97706", bg:"#1c1006", go:"quiz" },
+            ].map(c=>(
+              <button key={c.title} onClick={()=>setTab(c.go)} style={{ background:c.bg, border:`1px solid ${c.color}50`, borderRadius:14, padding:15, textAlign:"left", cursor:"pointer", color:"#fff" }}>
+                <div style={{ fontSize:28, marginBottom:6 }}>{c.icon}</div>
+                <div style={{ fontSize:13, fontWeight:600 }}>{c.title}</div>
+                <div style={{ fontSize:11, color:c.color, marginTop:2 }}>{c.sub}</div>
+              </button>
+            ))}
+          </div>
+
+          <div style={{ background:"#1a1a2e", borderRadius:14, padding:14, borderLeft:"3px solid #a855f7" }}>
+            <div style={{ fontSize:12, fontWeight:600, color:"#a855f7", marginBottom:5 }}>💡 আজকের টিপস</div>
+            <div style={{ fontSize:13, color:"#e2e8f0", lineHeight:1.7 }}>আয়নার সামনে প্রতিদিন ৫টি English বাক্য বলো। ভুল হলেও থামবে না — ১ মাসেই পার্থক্য দেখবে! 🌟</div>
+          </div>
+        </div>
+      )}
+
+      {/* BOOK — Chapter List */}
+      {tab==="book" && !chapter && (
+        <div style={{ padding:"16px 14px" }}>
+          <div style={{ fontSize:17, fontWeight:700, marginBottom:4 }}>📖 সম্পূর্ণ English বই</div>
+          <div style={{ fontSize:12, color:"#94a3b8", marginBottom:14 }}>শুরু থেকে Fluent পর্যন্ত — ধাপে ধাপে শেখো</div>
+          {BOOK_CHAPTERS.map(ch=>(
+            <button key={ch.id} onClick={()=>{setChapter(ch);setLesson(null);}} style={{ width:"100%", background:"#1a1a2e", border:"1px solid #2d2d4e", borderRadius:14, padding:15, marginBottom:10, textAlign:"left", cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", gap:12 }}>
+              <div style={{ fontSize:30, minWidth:38, textAlign:"center" }}>{ch.icon}</div>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:9, color:"#6c3de0", fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>Chapter {ch.id}</div>
+                <div style={{ fontSize:14, fontWeight:600, marginTop:2 }}>{ch.title}</div>
+                <div style={{ fontSize:11, color:"#818cf8", marginTop:2 }}>{ch.subtitle} • {ch.lessons.length} Lesson</div>
+              </div>
+              <div style={{ color:"#6c3de0", fontSize:18 }}>›</div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* BOOK — Lesson List */}
+      {tab==="book" && chapter && !lesson && (
+        <div style={{ padding:"16px 14px" }}>
+          <button onClick={()=>setChapter(null)} style={{ background:"none", border:"none", color:"#a78bfa", cursor:"pointer", fontSize:13, marginBottom:12, padding:0 }}>← সব Chapter</button>
+          <div style={{ fontSize:26, marginBottom:4 }}>{chapter.icon}</div>
+          <div style={{ fontSize:17, fontWeight:700, marginBottom:2 }}>{chapter.title}</div>
+          <div style={{ fontSize:12, color:"#94a3b8", marginBottom:16 }}>{chapter.subtitle}</div>
+          {chapter.lessons.map((ls,i)=>(
+            <button key={i} onClick={()=>setLesson(ls)} style={{ width:"100%", background:"#1a1a2e", border:"1px solid #2d2d4e", borderRadius:14, padding:15, marginBottom:10, textAlign:"left", cursor:"pointer", color:"#fff", display:"flex", alignItems:"center", gap:12 }}>
+              <div style={{ background:"#6c3de0", borderRadius:10, width:34, height:34, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:700, fontSize:14, flexShrink:0 }}>{i+1}</div>
+              <div>
+                <div style={{ fontSize:14, fontWeight:600 }}>{ls.title}</div>
+                <div style={{ fontSize:11, color:"#64748b", marginTop:2 }}>{ls.sections.length} বিভাগ</div>
+              </div>
+              <div style={{ marginLeft:"auto", color:"#6c3de0" }}>›</div>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* BOOK — Lesson Detail */}
+      {tab==="book" && chapter && lesson && (
+        <div style={{ padding:"16px 14px" }}>
+          <button onClick={()=>setLesson(null)} style={{ background:"none", border:"none", color:"#a78bfa", cursor:"pointer", fontSize:13, marginBottom:12, padding:0 }}>← {chapter.title}</button>
+          <div style={{ fontSize:16, fontWeight:700, marginBottom:6 }}>{lesson.title}</div>
+          <div style={{ fontSize:13, color:"#94a3b8", marginBottom:14, lineHeight:1.6 }}>{lesson.content}</div>
+          {lesson.sections.map((sec,si)=>(
+            <div key={si} style={{ background:"#1a1a2e", borderRadius:14, padding:15, marginBottom:12 }}>
+              <div style={{ fontSize:13, fontWeight:700, color:"#a78bfa", marginBottom:10 }}>{sec.heading}</div>
+              {sec.items.map((item,ii)=>{
+                const enMatch = item.match(/^([A-Za-z][^(—\n]*)/);
+                const enText = enMatch ? enMatch[1].trim() : null;
+                return (
+                  <div key={ii} style={{ display:"flex", alignItems:"flex-start", gap:8, marginBottom:8 }}>
+                    <div style={{ background:"#6c3de0", borderRadius:3, width:5, height:5, marginTop:8, flexShrink:0 }}/>
+                    <div style={{ fontSize:13, lineHeight:1.75, color:"#e2e8f0", flex:1 }}>
+                      {item}
+                      {enText && enText.length > 2 && (
+                        <button onClick={()=>speak(enText)} style={{ background:"none", border:"none", cursor:"pointer", fontSize:13, marginLeft:6, opacity:0.7 }}>🔊</button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ))}
+          {lesson.tip && (
+            <div style={{ background:"#064e3b", borderRadius:12, padding:13, borderLeft:"3px solid #059669", marginBottom:8 }}>
+              <div style={{ fontSize:12, fontWeight:600, color:"#34d399", marginBottom:4 }}>💡 Practice টিপস</div>
+              <div style={{ fontSize:13, color:"#a7f3d0", lineHeight:1.6 }}>{lesson.tip}</div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* FLASHCARD */}
+      {tab==="words" && (
+        <div style={{ padding:"16px 14px" }}>
+          <div style={{ fontSize:17, fontWeight:700, marginBottom:4 }}>📝 Flashcard</div>
+          <div style={{ fontSize:12, color:"#94a3b8", marginBottom:14 }}>কার্ডে ট্যাপ করো • 🔊 Indian English শোনো</div>
+          <div onClick={()=>setWFlip(f=>!f)} style={{ background:wFlip?"linear-gradient(135deg,#065f46,#047857)":"linear-gradient(135deg,#1e1b4b,#312e81)", borderRadius:20, padding:"36px 22px", textAlign:"center", cursor:"pointer", minHeight:185, display:"flex", flexDirection:"column", justifyContent:"center", marginBottom:12, transition:"all 0.3s" }}>
+            {!wFlip ? (
+              <>
+                <div style={{ fontSize:38, fontWeight:800, letterSpacing:2 }}>{FLASHWORDS[wIdx].word}</div>
+                <div style={{ fontSize:13, color:"#a78bfa", marginTop:10 }}>উচ্চারণ: {FLASHWORDS[wIdx].pron}</div>
+                <div style={{ fontSize:12, color:"#64748b", marginTop:8 }}>ট্যাপ করো বাংলা দেখতে →</div>
+              </>
+            ) : (
+              <>
+                <div style={{ fontSize:28, fontWeight:700, color:"#34d399" }}>{FLASHWORDS[wIdx].bn}</div>
+                <div style={{ fontSize:14, color:"#6ee7b7", marginTop:8, fontStyle:"italic" }}>"{FLASHWORDS[wIdx].ex}"</div>
+              </>
+            )}
+          </div>
+          <div style={{ display:"flex", gap:10, justifyContent:"center", marginBottom:14 }}>
+            <button onClick={()=>speak(FLASHWORDS[wIdx].word)} style={{ background:"#6c3de0", border:"none", color:"#fff", borderRadius:20, padding:"10px 20px", cursor:"pointer", fontSize:13, fontWeight:600 }}>🔊 শোনো</button>
+            <button onClick={()=>{setWIdx(i=>(i+1)%FLASHWORDS.length);setWFlip(false);setXp(x=>x+2);}} style={{ background:"#059669", border:"none", color:"#fff", borderRadius:20, padding:"10px 20px", cursor:"pointer", fontSize:13, fontWeight:600 }}>পরের শব্দ →</button>
+          </div>
+          <div style={{ fontSize:12, color:"#64748b", textAlign:"center", marginBottom:12 }}>{wIdx+1} / {FLASHWORDS.length}</div>
+          <div style={{ display:"flex", flexWrap:"wrap", gap:7 }}>
+            {FLASHWORDS.map((w,i)=>(
+              <button key={i} onClick={()=>{setWIdx(i);setWFlip(false);}} style={{ background:wIdx===i?"#6c3de0":"#1a1a2e", border:`1px solid ${wIdx===i?"#a78bfa":"#2d2d4e"}`, borderRadius:20, padding:"5px 12px", cursor:"pointer", color:"#fff", fontSize:11 }}>{w.word}</button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* QUIZ */}
+      {tab==="quiz" && (
+        <div style={{ padding:"16px 14px" }}>
+          <div style={{ fontSize:17, fontWeight:700, marginBottom:4 }}>🧠 Quiz</div>
+          <div style={{ fontSize:12, color:"#94a3b8", marginBottom:14 }}>সঠিক উত্তর বেছে নাও</div>
+          {!qDone ? (
+            <>
+              <div style={{ background:"#1a1a2e", borderRadius:14, padding:15, marginBottom:12 }}>
+                <div style={{ display:"flex", justifyContent:"space-between", fontSize:12, color:"#94a3b8", marginBottom:10 }}>
+                  <span>প্রশ্ন {qIdx+1}/{QUIZZES.length}</span><span>স্কোর: {qScore} ⭐</span>
+                </div>
+                <div style={{ height:5, background:"#2d2d4e", borderRadius:4, marginBottom:13 }}>
+                  <div style={{ height:"100%", width:`${(qIdx/QUIZZES.length)*100}%`, background:"#6c3de0", borderRadius:4, transition:"width 0.3s" }}/>
+                </div>
+                <div style={{ fontSize:15, fontWeight:600, lineHeight:1.5 }}>{QUIZZES[qIdx].q}</div>
+              </div>
+              <div style={{ display:"flex", flexDirection:"column", gap:9 }}>
+                {QUIZZES[qIdx].opts.map((opt,i)=>{
+                  let bg="#1a1a2e", border="#2d2d4e", color="#e2e8f0";
+                  if (qAns!==null){
+                    if (i===QUIZZES[qIdx].a){bg="#064e3b";border="#059669";color="#34d399";}
+                    else if (i===qAns){bg="#450a0a";border="#ef4444";color="#fca5a5";}
+                  }
+                  return <button key={i} onClick={()=>answerQ(i)} style={{ background:bg, border:`1px solid ${border}`, borderRadius:12, padding:"12px 15px", textAlign:"left", cursor:qAns!==null?"default":"pointer", color, fontSize:13, transition:"all 0.2s" }}>{["A","B","C","D"][i]}. {opt}</button>;
+                })}
+              </div>
+              {qAns!==null && (
+                <button onClick={()=>{ if(qIdx+1>=QUIZZES.length)setQDone(true); else{setQIdx(i=>i+1);setQAns(null);} }} style={{ width:"100%", background:"linear-gradient(135deg,#6c3de0,#a855f7)", border:"none", color:"#fff", borderRadius:12, padding:14, marginTop:13, cursor:"pointer", fontSize:14, fontWeight:700 }}>
+                  {qIdx+1>=QUIZZES.length?"ফলাফল দেখো 🎉":"পরের প্রশ্ন →"}
+                </button>
+              )}
+            </>
+          ) : (
+            <div style={{ textAlign:"center", paddingTop:20 }}>
+              <div style={{ fontSize:54, marginBottom:12 }}>{qScore>=10?"🏆":qScore>=7?"🌟":"💪"}</div>
+              <div style={{ fontSize:21, fontWeight:700, marginBottom:6 }}>{qScore>=10?"অসাধারণ!":qScore>=7?"ভালো করেছ!":"আরো practice করো!"}</div>
+              <div style={{ fontSize:13, color:"#94a3b8", marginBottom:16 }}>{QUIZZES.length} এর মধ্যে {qScore} সঠিক</div>
+              <div style={{ background:"linear-gradient(135deg,#1e1b4b,#312e81)", borderRadius:16, padding:16, marginBottom:16, display:"inline-block", minWidth:150 }}>
+                <div style={{ fontSize:34, fontWeight:800, color:"#a78bfa" }}>{Math.round((qScore/QUIZZES.length)*100)}%</div>
+                <div style={{ fontSize:11, color:"#94a3b8", marginTop:3 }}>সাফল্যের হার</div>
+              </div>
+              <br/>
+              <button onClick={()=>{setQIdx(0);setQScore(0);setQAns(null);setQDone(false);}} style={{ background:"linear-gradient(135deg,#6c3de0,#a855f7)", border:"none", color:"#fff", borderRadius:12, padding:"12px 28px", cursor:"pointer", fontSize:14, fontWeight:700 }}>আবার দাও 🔄</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* AI TUTOR */}
+      {tab==="ai" && (
+        <div style={{ display:"flex", flexDirection:"column", height:"calc(100vh - 128px)" }}>
+          <div style={{ padding:"13px 14px 7px" }}>
+            <div style={{ fontSize:17, fontWeight:700 }}>🤖 AI English শিক্ষক</div>
+            <div style={{ fontSize:11, color:"#94a3b8", marginTop:1 }}>যেকোনো প্রশ্ন করো — বিস্তারিত উত্তর পাবে</div>
+          </div>
+          <div style={{ flex:1, overflowY:"auto", padding:"6px 12px", display:"flex", flexDirection:"column", gap:10 }}>
+            {msgs.map((m,i)=>(
+              <div key={i} style={{ display:"flex", justifyContent:m.role==="user"?"flex-end":"flex-start" }}>
+                <div style={{
+                  maxWidth:"85%",
+                  background:m.role==="user"?"linear-gradient(135deg,#6c3de0,#a855f7)":"#1a1a2e",
+                  borderRadius:m.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",
+                  padding:"11px 14px", fontSize:13, lineHeight:1.8,
+                  border:m.role==="ai"?"1px solid #2d2d4e":"none",
+                  whiteSpace:"pre-wrap",
+                }}>{m.text}</div>
+              </div>
+            ))}
+            {thinking && (
+              <div style={{ display:"flex" }}>
+                <div style={{ background:"#1a1a2e", borderRadius:"16px 16px 16px 4px", padding:"11px 14px", border:"1px solid #2d2d4e", color:"#6c3de0", fontSize:20, letterSpacing:5 }}>●●●</div>
+              </div>
+            )}
+            <div ref={chatEnd}/>
+          </div>
+          <div style={{ padding:"7px 12px 10px", background:"#0f0f1a", borderTop:"1px solid #1a1a2e" }}>
+            <div style={{ display:"flex", gap:6, marginBottom:7, flexWrap:"wrap" }}>
+              {["Verb বিস্তারিত বোঝাও","Tense শেখাও","Interview English","Daily conversation tips","Grammar শেখাও"].map(s=>(
+                <button key={s} onClick={()=>setInput(s)} style={{ background:"#1a1a2e", border:"1px solid #2d2d4e", borderRadius:20, padding:"4px 10px", color:"#a78bfa", fontSize:11, cursor:"pointer" }}>{s}</button>
+              ))}
+            </div>
+            <div style={{ display:"flex", gap:8 }}>
+              <input value={input} onChange={e=>setInput(e.target.value)} onKeyDown={e=>e.key==="Enter"&&sendMsg()}
+                placeholder="বাংলায় যেকোনো প্রশ্ন করো..."
+                style={{ flex:1, background:"#1a1a2e", border:"1px solid #2d2d4e", borderRadius:24, padding:"11px 15px", color:"#fff", fontSize:13, outline:"none" }}/>
+              <button onClick={sendMsg} disabled={thinking||!input.trim()} style={{ background:"linear-gradient(135deg,#6c3de0,#a855f7)", border:"none", borderRadius:24, padding:"11px 17px", color:"#fff", cursor:"pointer", fontSize:18, opacity:thinking||!input.trim()?0.5:1 }}>➤</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Nav */}
+      <div style={{ position:"fixed", bottom:0, left:"50%", transform:"translateX(-50%)", width:"100%", maxWidth:480, background:"#0f0f1a", borderTop:"1px solid #1a1a2e", display:"flex", zIndex:100 }}>
+        {TABS.map(t=>(
+          <button key={t.id} onClick={()=>setTab(t.id)} style={{ flex:1, background:"none", border:"none", padding:"9px 4px", cursor:"pointer", color:tab===t.id?"#a855f7":"#64748b", display:"flex", flexDirection:"column", alignItems:"center", gap:2 }}>
+            <div style={{ fontSize:20 }}>{t.icon}</div>
+            <div style={{ fontSize:10, fontWeight:tab===t.id?700:400 }}>{t.label}</div>
+            {tab===t.id && <div style={{ width:18, height:2, background:"#a855f7", borderRadius:1 }}/>}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
